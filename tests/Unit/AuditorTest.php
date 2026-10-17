@@ -97,7 +97,7 @@ it('warns about a security deadline inside 90 days', function () {
     $october = (new Auditor)->analyse($json, null, [], new DateTimeImmutable('2026-10-17'));
     $june = (new Auditor)->analyse($json, null, [], new DateTimeImmutable('2026-06-01'));
 
-    expect($october['deadlines'])->toBe(['Deadline: PHP 8.2 stops receiving security fixes on 31 Dec 2026, in 75 days.'])
+    expect($october['deadlines'])->toBe(['Deadline: PHP 8.2, the oldest version the app accepts, stops receiving security fixes on 31 Dec 2026, in 75 days.'])
         ->and($october['findings'][0])->toStartWith('Deadline: PHP 8.2')
         ->and($june['deadlines'])->toBe([]);
 });
@@ -114,4 +114,12 @@ it('turns a near deadline into an upgrade pass rather than nothing to do', funct
 
     expect($report['upgrade']['size'])->toBe(Auditor::SIZE_SINGLE)
         ->and($report['upgrade']['reason'])->toContain('security deadline');
+});
+
+
+it('describes the PHP version as the declared minimum, not the server runtime', function () use ($today) {
+    $report = (new Auditor)->analyse(['require' => ['php' => '^8.0', 'laravel/framework' => '^10.0']], null, [], $today);
+
+    expect($report['php']['label'])->toStartWith('The app still accepts PHP 8.0')
+        ->and($report['php']['label'])->toContain('check the server runs a supported version');
 });

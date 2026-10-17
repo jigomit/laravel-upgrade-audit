@@ -8,6 +8,8 @@ Point it at a Laravel app and it tells you, in one screen, how far the app is fr
 - **Packages a major release behind** the latest stable version.
 - **How big the upgrade is**: nothing to do, one pass, or a staged upgrade one major at a time.
 
+The PHP version it checks is the oldest one your `composer.json` (or the lock's platform setting) accepts: the version the app *promises* to run on. It cannot see your server, so check the runtime there with `php -v`.
+
 It reads two files and calls the public Packagist API. It never runs your code, never sends your `composer.json` anywhere else, and needs no account.
 
 ## Install
@@ -51,13 +53,13 @@ Laravel upgrade audit
 Score: 13/100    Upgrade: Staged upgrade, one major at a time
 
 Laravel  9        END OF LIFE
-PHP      8.0      END OF LIFE
+PHP min  8.0      END OF LIFE
 Packages 4        1 abandoned, 4 a major behind
 
 Findings
 --------
 - Laravel 9 is 4 majors behind Laravel 13; its security fixes ended on 6 Feb 2024.
-- PHP 8.0 stopped receiving security fixes on 26 Nov 2023.
+- The app still accepts PHP 8.0, which stopped receiving security fixes on 26 Nov 2023. Raise the minimum and check the server runs a supported version.
 - One package has been abandoned by its maintainer: fruitcake/laravel-cors.
 - 4 packages are at least one major release behind the latest stable version.
 - Laravel 9 is 4 majors behind Laravel 13. Move one major at a time with the test suite green between each.
@@ -69,6 +71,7 @@ Packages a major release behind
 - guzzlehttp/guzzle 7.8.1 -> 8.2.0
 - spatie/laravel-permission 5.11.1 -> 8.3.0
 
+PHP min is the oldest version composer.json accepts. Check the server runtime separately (php -v).
 Support dates checked on 2026-10-17 against php.net and laravel.com.
 ```
 

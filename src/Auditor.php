@@ -257,7 +257,7 @@ class Auditor
             $parts[] = "Laravel {$laravel['major']} is {$behind} ".($behind === 1 ? 'major' : 'majors')." behind Laravel {$this->calendar->currentLaravel}";
         }
         if ($phpEol) {
-            $parts[] = "PHP {$php['minor']} no longer receives security fixes";
+            $parts[] = "the app still accepts PHP {$php['minor']}, which no longer receives security fixes";
         }
         if ($abandoned > 0) {
             $parts[] = $abandoned.' '.($abandoned === 1 ? 'package is' : 'packages are').' abandoned';
@@ -339,7 +339,7 @@ class Auditor
     {
         $out = [];
         $checks = [
-            ["PHP {$php['minor']}", $php['security_until']],
+            ["PHP {$php['minor']}, the oldest version the app accepts,", $php['security_until']],
             ["Laravel {$laravel['major']}", $laravel['security_until']],
         ];
 
@@ -399,14 +399,14 @@ class Auditor
     private function phpLabel(?string $minor, string $status, ?array $row): string
     {
         if ($minor === null) {
-            return 'No PHP version is declared, so the runtime could not be checked against its support dates.';
+            return 'No PHP version is declared, so the PHP requirement could not be checked against its support dates.';
         }
 
         return match ($status) {
-            self::STATUS_EOL => "PHP {$minor} stopped receiving security fixes".(! empty($row['security_until']) ? ' on '.$this->date($row['security_until']) : '').'.',
-            self::STATUS_SECURITY_ONLY => "PHP {$minor} gets security fixes only, until ".$this->date($row['security_until'] ?? null).'.',
-            self::STATUS_CURRENT => "PHP {$minor} is actively supported".(! empty($row['security_until']) ? ', with security fixes until '.$this->date($row['security_until']) : '').'.',
-            default => "PHP {$minor} is not in the support calendar this version knows about.",
+            self::STATUS_EOL => "The app still accepts PHP {$minor}, which stopped receiving security fixes".(! empty($row['security_until']) ? ' on '.$this->date($row['security_until']) : '').'. Raise the minimum and check the server runs a supported version.',
+            self::STATUS_SECURITY_ONLY => "The oldest PHP the app accepts is {$minor}, which gets security fixes only, until ".$this->date($row['security_until'] ?? null).'.',
+            self::STATUS_CURRENT => "The app requires PHP {$minor} or newer, which is actively supported".(! empty($row['security_until']) ? ', with security fixes until '.$this->date($row['security_until']) : '').'.',
+            default => "The app's PHP minimum ({$minor}) is not in the support calendar this version knows about.",
         };
     }
 

@@ -25,7 +25,7 @@ final class TextReport
             sprintf('Score: %d/100    Upgrade: %s', $report['score'], $sizes[$report['upgrade']['size']] ?? $report['upgrade']['size']),
             '',
             sprintf('Laravel  %-8s %s', $report['laravel']['major'] ?? '?', self::status($report['laravel']['status'])),
-            sprintf('PHP      %-8s %s', $report['php']['minor'] ?? '?', self::status($report['php']['status'])),
+            sprintf('PHP min  %-8s %s', $report['php']['minor'] ?? '?', self::status($report['php']['status'])),
             sprintf('Packages %-8s %s', $report['packages']['total'], $report['packages']['checked']
                 ? count($report['packages']['abandoned']).' abandoned, '.count($report['packages']['outdated']).' a major behind'
                 : 'not checked (offline)'),
@@ -53,6 +53,7 @@ final class TextReport
         }
 
         $lines[] = '';
+        $lines[] = 'PHP min is the oldest version composer.json accepts. Check the server runtime separately (php -v).';
         $lines[] = 'Support dates checked on '.$report['calendar_checked_on'].' against php.net and laravel.com.';
 
         return implode(PHP_EOL, $lines).PHP_EOL;
