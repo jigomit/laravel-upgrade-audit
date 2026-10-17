@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Usage: vendor/bin/laravel-upgrade-audit [path] [--json] [--offline] [--fail-under=N]
+ */
+
+foreach ([__DIR__.'/../../../autoload.php', __DIR__.'/../vendor/autoload.php'] as $autoload) {
+    if (is_file($autoload)) {
+        require $autoload;
+        break;
+    }
+}
+
+use Jigomit\UpgradeAudit\Project;
+use Jigomit\UpgradeAudit\TextReport;
+
+$args = array_slice($argv, 1);
+$path = getcwd();
+$json = false;
+$offline = false;
+$failUnder = null;
+
+foreach ($args as $arg) {
+    if ($arg === '--json') {
+        $json = true;
+    } elseif ($arg === '--offline') {
+        $offline = true;
+    } elseif (str_starts_with($arg, '--fail-under=')) {
+        $failUnder = (int) substr($arg, 13);
+    } elseif ($arg === '--help' || $arg === '-h') {
+        fwrite(STDOUT, "Usage: laravel-upgrade-audit [path] [--json] [--offline] [--fail-under=N]\n");
+        exit(0);
+    } else {
+        $path = $arg;
+    }
+}
+
+try {
+    $report = Project::load($path)->audit(! $offline);
+} catch (Throwable $e) {
+    fwrite(STDERR, $e->getMessage().PHP_EOL);
+    exit(2);
+}
+
+fwrite(STDOUT, $json ? json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL : TextReport::render($report));
+
+exit($failUnder !== null && $report['score'] < $failUnder ? 1 : 0);

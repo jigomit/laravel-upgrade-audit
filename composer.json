@@ -1,0 +1,54 @@
+{
+    "name": "jigomit/laravel-upgrade-audit",
+    "description": "Audit a Laravel app's composer.json or composer.lock: PHP and Laravel end-of-life dates, abandoned packages, and how many major versions stand between you and current.",
+    "keywords": ["laravel", "upgrade", "audit", "end-of-life", "eol", "composer", "php", "abandoned-packages"],
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/jigomit/laravel-upgrade-audit",
+    "authors": [
+        {
+            "name": "Dhavalkumar Mesavaniya",
+            "homepage": "https://jigomit.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "illuminate/console": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0"
+    },
+    "suggest": {
+        "illuminate/console": "Adds the `php artisan upgrade:audit` command inside a Laravel app."
+    },
+    "autoload": {
+        "psr-4": {
+            "Jigomit\\UpgradeAudit\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jigomit\\UpgradeAudit\\Tests\\": "tests/"
+        }
+    },
+    "bin": ["bin/laravel-upgrade-audit"],
+    "extra": {
+        "laravel": {
+            "providers": ["Jigomit\\UpgradeAudit\\Laravel\\UpgradeAuditServiceProvider"]
+        }
+    },
+    "scripts": {
+        "test": "pest"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

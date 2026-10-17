@@ -1,0 +1,1 @@
+{"name": "acme/no-lock", "require": {"php": ">=7.4", "laravel/framework": "^8.75"}}

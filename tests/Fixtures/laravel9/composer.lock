@@ -1,0 +1,6 @@
+{"packages": [
+  {"name": "laravel/framework", "version": "v9.52.16"},
+  {"name": "fruitcake/laravel-cors", "version": "v2.2.0"},
+  {"name": "guzzlehttp/guzzle", "version": "7.8.1"},
+  {"name": "spatie/laravel-permission", "version": "5.11.1"}
+], "platform": {"php": "^8.0"}, "platform-overrides": {}}
